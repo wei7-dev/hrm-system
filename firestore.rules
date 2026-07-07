@@ -1,0 +1,102 @@
+rules_version = '2';
+
+// ============================================================
+// FIRESTORE SECURITY RULES - HRM System
+// ============================================================
+// Đây là lớp bảo vệ QUAN TRỌNG NHẤT của toàn hệ thống.
+// Ẩn nút/route ở giao diện (admin.html, admin-auth.js) chỉ ngăn được
+// người dùng thông thường bấm nhầm — không ngăn được ai đó mở Console
+// trình duyệt (F12) và gọi thẳng Firestore SDK để đọc/ghi dữ liệu.
+// Rules dưới đây mới là thứ thật sự chặn ở tầng dữ liệu.
+//
+// CÁCH ÁP DỤNG:
+// 1. Vào Firebase Console -> Firestore Database -> tab "Rules"
+// 2. Dán toàn bộ nội dung file này vào, bấm "Publish"
+//
+// YÊU CẦU: cần collection "accounts", mỗi doc ID = uid của Firebase Auth
+// user đó, có field "role": "admin" | "hr" | "employee" | "investor"
+// ============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hàm phụ trợ: lấy role của user đang đăng nhập từ collection "accounts"
+    function getRole() {
+      return get(/databases/$(database)/documents/accounts/$(request.auth.uid)).data.role;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdminOrHR() {
+      return isSignedIn() && getRole() in ['admin', 'hr'];
+    }
+
+    function isAdmin() {
+      return isSignedIn() && getRole() == 'admin';
+    }
+
+    function isStaff() {
+      return isSignedIn() && getRole() in ['employee', 'staff', 'nv', 'sv', 'tt'];
+    }
+
+    function isInvestor() {
+      return isSignedIn() && getRole() == 'investor';
+    }
+
+    // ----------------------------------------------------------
+    // accounts: chứa role của từng tài khoản đăng nhập
+    // - Chính chủ được TỰ TẠO doc của mình lúc đăng ký, nhưng CHỈ với
+    //   role "employee" hoặc "investor" (không tự phong admin/hr được).
+    // - Sửa role (nâng cấp lên admin/hr) chỉ admin mới làm được.
+    // - Đọc: chính chủ, hoặc admin/hr.
+    // ----------------------------------------------------------
+    match /accounts/{uid} {
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdminOrHR());
+
+      allow create: if isSignedIn()
+                    && request.auth.uid == uid
+                    && request.resource.data.role in ['employee', 'investor'];
+
+      allow update, delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------------
+    // nhan_vien_chinh_thuc: hồ sơ nhân sự (tên, mã NV, QR...)
+    // Chỉ HR/Admin được thêm/sửa/xóa. HR + Staff đọc được (cần cho
+    // tìm NV, tìm lịch...). Nhà đầu tư KHÔNG đọc được mục này.
+    // ----------------------------------------------------------
+    match /nhan_vien_chinh_thuc/{employeeId} {
+      allow read: if isAdminOrHR() || isStaff();
+      allow write: if isAdminOrHR();
+    }
+
+    // ----------------------------------------------------------
+    // attendance: dữ liệu chấm công (checkIn/checkOut theo ngày)
+    // Đọc/ghi: HR + Staff (đã đăng nhập với role hợp lệ).
+    // Nhà đầu tư KHÔNG đọc được mục này.
+    // Xóa: chỉ HR/Admin.
+    // ----------------------------------------------------------
+    match /attendance/{recordId} {
+      allow read: if isAdminOrHR() || isStaff();
+      allow create, update: if isAdminOrHR() || isStaff();
+      allow delete: if isAdminOrHR();
+    }
+
+    // ----------------------------------------------------------
+    // bao_cao_tai_chinh: báo cáo tài chính & dự án tương lai
+    // Chỉ Nhà đầu tư (và HR/Admin) đọc được. Staff KHÔNG đọc được.
+    // Chỉ HR/Admin được ghi/cập nhật báo cáo.
+    // ----------------------------------------------------------
+    match /bao_cao_tai_chinh/{reportId} {
+      allow read: if isInvestor() || isAdminOrHR();
+      allow write: if isAdminOrHR();
+    }
+
+    // Mặc định: chặn tất cả những gì không khớp rule ở trên
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

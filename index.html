@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRM System - Hệ Thống Chấm Công Nhân Sự</title>
+    <!-- Thư viện Font Awesome lấy icon thông báo -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <!-- Liên kết file định dạng CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- THANH HEADER CHÍNH -->
+    <header class="main-header">
+        <div class="header-container">
+
+            <!-- Nút Hamburger ba gạch: đặt TRƯỚC logo theo yêu cầu -->
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+
+            <!-- Khu vực 1: Logo Công Nghệ Hiện Đại -->
+            <div class="logo-area">
+                <a href="#" class="brand-logo">
+                    <!-- Icon công nghệ vẽ bằng SVG - hình mạch điện/chip -->
+                    <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                        <!-- Hình lục giác trung tâm -->
+                        <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient)"
+                            stroke-width="2" />
+                        <!-- Mạch kết nối -->
+                        <circle cx="24" cy="24" r="8" fill="url(#techGradient)" />
+                        <circle cx="24" cy="24" r="4" fill="#0a0f1a" />
+                        <!-- Các điểm nút mạch -->
+                        <circle cx="24" cy="8" r="3" fill="#00d4ff" />
+                        <circle cx="38" cy="16" r="3" fill="#0072ff" />
+                        <circle cx="38" cy="32" r="3" fill="#00d4ff" />
+                        <circle cx="24" cy="40" r="3" fill="#0072ff" />
+                        <circle cx="10" cy="32" r="3" fill="#00d4ff" />
+                        <circle cx="10" cy="16" r="3" fill="#0072ff" />
+                        <!-- Các đường kết nối từ tâm ra ngoài -->
+                        <line x1="24" y1="16" x2="24" y2="8" stroke="#00d4ff" stroke-width="2" />
+                        <line x1="30" y1="20" x2="38" y2="16" stroke="#0072ff" stroke-width="2" />
+                        <line x1="30" y1="28" x2="38" y2="32" stroke="#00d4ff" stroke-width="2" />
+                        <line x1="24" y1="32" x2="24" y2="40" stroke="#0072ff" stroke-width="2" />
+                        <line x1="18" y1="28" x2="10" y2="32" stroke="#00d4ff" stroke-width="2" />
+                        <line x1="18" y1="20" x2="10" y2="16" stroke="#0072ff" stroke-width="2" />
+                        <!-- Gradient definition -->
+                        <defs>
+                            <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00d4ff" />
+                                <stop offset="100%" style="stop-color:#0072ff" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <!-- Chữ tên thương hiệu hệ thống -->
+                    <span class="brand-name">HRM System</span>
+                </a>
+            </div>
+
+            <!-- Khu vực 2: Danh sách Menu điều hướng hiện đại đa cấp -->
+            <nav class="navbar">
+                <ul class="nav-links" id="navLinksList">
+                    <li><a href="#" class="active">Trang chủ</a></li>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#services">Dịch vụ</a></li>
+
+                    <!-- Mục Tra cứu - menu đa cấp mới -->
+                    <li class="has-dropdown" id="navTraCuuParent">
+                        <a href="#" class="dropdown-toggle">
+                            Tra cứu
+                            <!-- Biểu tượng mũi tên nhỏ chỉ xuống -->
+                            <svg class="arrow-icon" viewBox="0 0 24 24">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
+                        </a>
+                        <!-- Menu cấp 2 thả xuống -->
+                        <ul class="dropdown-menu">
+                            <li id="menuChamCong"><a href="chamcong.html">Chấm công</a></li>
+                            <li id="menuSearchStaff"><a href="search-staff.html">Tra cứu nhân viên</a></li>
+                            <li id="menuSearchDate"><a href="search-date.html">Tra cứu lịch làm</a></li>
+                            <li id="menuSearchHistory"><a href="history.html">Lịch sử tra cứu</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#contact">Liên hệ</a></li>
+                    <!-- Đã gỡ link "Quản Trị Hệ Thống" khỏi menu công khai: link này trước đây luôn hiển thị
+                         cho MỌI người dùng (kể cả chưa đăng nhập) và chỉ được "chặn" bằng prompt() nhập PIN
+                         ở phía client - mã PIN lộ thẳng trong index.js và có thể bị bypass hoàn toàn bằng cách
+                         set sessionStorage qua DevTools. Link quản trị thật sự giờ CHỈ nằm trong #profileMenuAdmin
+                         bên trong profile-dropdown, vốn được ẩn mặc định (display:none) và chỉ được profile-menu.js
+                         hiện ra sau khi xác thực role admin thật từ server/Firebase. -->
+                    <!-- Đường gạch chân ma thuật chạy theo chuột -->
+                    <div class="magic-line" id="magicLine"></div>
+                </ul>
+            </nav>
+
+            <!-- Khu vực 3: Tiện ích -->
+            <div class="header-utilities">
+
+                <div class="notification-container" id="notiContainer">
+                    <!-- Khối chứa chuông phát sáng -->
+                    <div class="notification-badge" id="notiBell">
+                        <button class="button">
+                            <svg viewBox="0 0 448 512" class="bell">
+                                <path
+                                    d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Bảng tin thông báo thả xuống -->
+                    <div class="noti-dropdown" id="notiDropdown">
+                        <div class="noti-header">Thông báo mới nhất</div>
+                        <div class="noti-item unread">
+                            <p><strong>Sự kiện:</strong> Hội thảo AI & Tương lai Công nghệ - 15/06/2026!</p>
+                            <span>5 phút trước</span>
+                        </div>
+                        <div class="noti-item">
+                            <p>Phiên bản phần mềm mới v3.5 đã được phát hành.</p>
+                            <span>1 giờ trước</span>
+                        </div>
+                        <div class="noti-footer"><a href="#">Xem tất cả thông báo</a></div>
+                    </div>
+                </div>
+
+                <!-- Nút Đăng nhập Gradient cải tiến -->
+                <a href="#" class="login-btn" id="openLoginBtn"><span id="loginBtnText">Đăng nhập</span></a>
+
+                <!-- Profile dropdown hiện sau khi đăng nhập thành công, ẩn mặc định -->
+                <div class="profile-menu" id="profileMenu" style="display:none;">
+                    <button class="profile-trigger" id="profileTrigger">
+                        <span class="profile-avatar" id="profileAvatar">U</span>
+                        <span class="profile-role-badge" id="profileRoleBadge">Staff</span>
+                        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-header">
+                            <span class="profile-avatar large" id="profileAvatarLarge">U</span>
+                            <div class="profile-header-text">
+                                <strong id="profileName">--</strong>
+                                <span id="profileEmail">--</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <span class="profile-section-label">Chức vụ</span>
+                            <span class="profile-role-full" id="profileRoleFull">--</span>
+                        </div>
+
+                        <ul class="profile-actions">
+                            <li id="profileMenuHistory" style="display:none;">
+                                <a href="#" id="openHistoryBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+                                    Lịch sử hoạt động
+                                </a>
+                            </li>
+                            <li id="profileMenuAdmin" style="display:none;">
+                                <a href="admin.html">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"/></svg>
+                                    Quản trị hệ thống
+                                </a>
+                            </li>
+                            <li id="profileMenuReport" style="display:none;">
+                                <a href="bao-cao-tai-chinh.html">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                                    Báo cáo tài chính
+                                </a>
+                            </li>
+                            <li class="profile-divider"></li>
+                            <li>
+                                <a href="#" id="logoutBtn" class="logout-link">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                                    Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Modal Lịch sử hoạt động (dạng hoá đơn) -->
+                <div class="history-modal" id="historyModal">
+                    <div class="history-modal-overlay" id="historyModalOverlay"></div>
+                    <div class="history-modal-box">
+                        <div class="history-modal-head">
+                            <button class="closeHistoryBtn" id="closeHistoryBtn">&times;</button>
+                            <h3>Lịch sử hoạt động</h3>
+                        </div>
+                        <div class="receipt-paper" id="receiptContent">
+                            <!-- Render động theo role bằng JS -->
+                        </div>
+                        <button class="history-close-bottom-btn" id="closeHistoryBtnBottom">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- POPUP MODAL TÀI KHOẢN CAO CẤP -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+
+        <!-- FORM 1: ĐĂNG NHẬP -->
+        <div class="modal-content auth-box" id="loginBox">
+            <button class="close-modal-btn closeLoginBtn">&times;</button>
+            <h2>Chào Mừng Trở Lại</h2>
+            <form action="#" class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="login-username">Tên đăng nhập hoặc Email</label>
+                    <input type="text" id="login-username" placeholder="Nhập email hoặc tài khoản" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mật khẩu</label>
+                    <input type="password" id="login-password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="form-actions">
+                    <label class="remember-me"><input type="checkbox"> Ghi nhớ tôi</label>
+                    <a href="#" class="forgot-pass" id="switchToForgot">Quên mật khẩu?</a>
+                </div>
+                <p class="auth-error" id="loginError" style="color:#ff5252; font-size:0.85rem; min-height:1.1em;"></p>
+                <button type="submit" class="submit-btn">Đăng nhập</button>
+            </form>
+            <div class="form-footer">
+                Chưa có tài khoản?
+                <a href="#" id="loginToRegister">
+                    Đăng ký ngay
+                </a>
+            </div>
+        </div>
+
+        <!-- FORM 2: QUÊN MẬT KHẨU -->
+        <div class="modal-content auth-box hidden" id="forgotBox">
+            <button class="close-modal-btn closeLoginBtn">&times;</button>
+            <h2>Khôi Phục Mật Khẩu</h2>
+            <p class="forgot-desc">
+                Vui lòng nhập email tài khoản của bạn. Chúng tôi sẽ gửi một liên kết để đặt lại mật khẩu mới.
+            </p>
+            <form action="#" class="auth-form" id="forgotForm">
+                <div class="form-group">
+                    <label for="forgot-email">Địa chỉ Email</label>
+                    <input type="email" id="forgot-email" placeholder="Nhập email đã đăng ký" required>
+                </div>
+                <p class="auth-error" id="forgotError" style="font-size:0.85rem; min-height:1.1em;"></p>
+                <button type="submit" class="submit-btn">Gửi yêu cầu khôi phục</button>
+                <div class="form-footer">
+                    Quay lại? <a href="#" id="forgotToLogin">Đăng nhập ngay</a>
+                </div>
+            </form>
+        </div>
+        <!-- FORM 3: ĐĂNG KÝ -->
+        <div class="modal-content auth-box hidden" id="registerBox">
+            <button class="close-modal-btn closeLoginBtn">&times;</button>
+
+            <h2>Tạo Tài Khoản</h2>
+
+            <form action="#" class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="register-name">Họ và tên</label>
+                    <input type="text" id="register-name" placeholder="Nhập họ và tên" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Nhập email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-role">Bạn là</label>
+                    <select id="register-role" required>
+                        <option value="employee">Nhân viên</option>
+                        <option value="investor">Nhà đầu tư</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Mật khẩu</label>
+                    <input type="password" id="register-password" placeholder="Nhập mật khẩu" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm">Xác nhận mật khẩu</label>
+                    <input type="password" id="register-confirm" placeholder="Nhập lại mật khẩu" required>
+                </div>
+
+                <p class="auth-error" id="registerError" style="color:#ff5252; font-size:0.85rem; min-height:1.1em;"></p>
+
+                <button type="submit" class="submit-btn">
+                    Đăng ký
+                </button>
+
+                <div class="form-footer">
+                    Đã có tài khoản?
+                    <a href="#" id="registerToLogin">
+                        Đăng nhập ngay
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TRANG CHỦ GIỚI THIỆU CÔNG TY -->
+    <main class="main-content">
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Hệ Thống <span class="gradient-text">Chấm Công</span><br>
+                        Nhân Sự Thông Minh
+                    </h1>
+                    <p class="hero-subtitle">
+                        HRM System là giải pháp quản lý nhân sự và chấm công hiện đại,
+                        giúp doanh nghiệp tự động hóa quy trình HR, theo dõi thời gian làm việc
+                        và tối ưu hóa nguồn nhân lực một cách hiệu quả.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#services" class="btn-primary">Khám Phá Tính Năng</a>
+                        <a href="#contact" class="btn-secondary">Dùng Thử Ngay</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">10K+</span>
+                            <span class="stat-label">Nhân viên quản lý</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Doanh nghiệp</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">99.9%</span>
+                            <span class="stat-label">Độ chính xác</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="tech-animation">
+                        <div class="orbit orbit-1"></div>
+                        <div class="orbit orbit-2"></div>
+                        <div class="orbit orbit-3"></div>
+                        <div class="center-core">
+                            <svg viewBox="0 0 100 100" class="core-icon">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="url(#coreGradient)"
+                                    stroke-width="2" />
+                                <circle cx="50" cy="50" r="30" fill="url(#coreGradient)" opacity="0.3" />
+                                <circle cx="50" cy="50" r="15" fill="#00d4ff" />
+                                <defs>
+                                    <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00d4ff" />
+                                        <stop offset="100%" style="stop-color:#0072ff" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section" id="about">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">Về Chúng Tôi</span>
+                    <h2 class="section-title">Giải Pháp Quản Lý Nhân Sự Toàn Diện</h2>
+                    <p class="section-desc">
+                        HRM System được phát triển với mục tiêu số hóa hoàn toàn quy trình
+                        quản lý nhân sự, từ chấm công đến quản lý lương thưởng,
+                        giúp doanh nghiệp tiết kiệm thời gian và chi phí vận hành.
+                    </p>
+                </div>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 6v6l4 2" />
+                            </svg>
+                        </div>
+                        <h3>Chấm Công Tự Động</h3>
+                        <p>Hệ thống chấm công thông minh với nhiều phương thức: vân tay, nhận diện khuôn mặt, GPS, QR
+                            Code.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
+                        <h3>Quản Lý Nhân Viên</h3>
+                        <p>Lưu trữ và quản lý thông tin nhân viên tập trung, dễ dàng tra cứu và cập nhật theo thời gian
+                            thực.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                        </div>
+                        <h3>Báo Cáo Thông Minh</h3>
+                        <p>Tự động tổng hợp báo cáo chấm công, phân tích năng suất và hỗ trợ ra quyết định quản lý.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services-section" id="services">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">Tính Năng</span>
+                    <h2 class="section-title">Hệ Thống Chấm Công Toàn Diện</h2>
+                    <p class="section-desc">
+                        Đầy đủ các tính năng quản lý nhân sự và chấm công
+                        giúp doanh nghiệp vận hành hiệu quả hơn.
+                    </p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 6v6l4 2" />
+                            </svg>
+                        </div>
+                        <h3>Chấm Công Đa Phương Thức</h3>
+                        <p>Hỗ trợ chấm công qua vân tay, khuôn mặt, thẻ từ, GPS và QR Code linh hoạt.</p>
+                        <a href="#" class="service-link">Tìm hiểu thêm</a>
+                    </div>
+                    <div class="service-card featured">
+                        <div class="featured-badge">Nổi Bật</div>
+                        <div class="service-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
+                        <h3>Quản Lý Hồ Sơ Nhân Viên</h3>
+                        <p>Lưu trữ toàn bộ thông tin nhân viên, hợp đồng, phòng ban một cách khoa học.</p>
+                        <a href="#" class="service-link">Tìm hiểu thêm</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                        </div>
+                        <h3>Quản Lý Lịch Làm Việc</h3>
+                        <p>Lập lịch ca làm, phân công công việc và theo dõi thời gian làm thêm giờ.</p>
+                        <a href="#" class="service-link">Tìm hiểu thêm</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                        </div>
+                        <h3>Báo Cáo & Thống Kê</h3>
+                        <p>Tự động xuất báo cáo chấm công, thống kê nghỉ phép, đi trễ theo nhiều tiêu chí.</p>
+                    </div>
+        </section>
+
+        <!-- Partners Section -->
+        <section class="partners-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-tag">Khách Hàng</span>
+                    <h2 class="section-title">Được Tin Dùng Bởi Nhiều Doanh Nghiệp</h2>
+                </div>
+            </div>
+            <div class="partners-marquee">
+                <div class="partners-track">
+                    <div class="partner-logo">FPT Software</div>
+                    <div class="partner-logo">Viettel</div>
+                    <div class="partner-logo">VinGroup</div>
+                    <div class="partner-logo">Techcombank</div>
+                    <div class="partner-logo">VNG Corp</div>
+                    <div class="partner-logo">Masan</div>
+                    <!-- Lặp lại danh sách để dải chạy liền mạch không bị đứt đoạn -->
+                    <div class="partner-logo" aria-hidden="true">FPT Software</div>
+                    <div class="partner-logo" aria-hidden="true">Viettel</div>
+                    <div class="partner-logo" aria-hidden="true">VinGroup</div>
+                    <div class="partner-logo" aria-hidden="true">Techcombank</div>
+                    <div class="partner-logo" aria-hidden="true">VNG Corp</div>
+                    <div class="partner-logo" aria-hidden="true">Masan</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <div class="section-container">
+                <div class="contact-wrapper">
+                    <div class="contact-info">
+                        <span class="section-tag">Liên Hệ</span>
+                        <h2 class="section-title">Tư Vấn Miễn Phí</h2>
+                        <p class="section-desc">
+                            Liên hệ ngay để được tư vấn giải pháp chấm công
+                            phù hợp nhất cho doanh nghiệp của bạn.
+                        </p>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                <span>123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</span>
+                            </div>
+                            <div class="contact-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                </svg>
+                                <span>1900 1234 56</span>
+                            </div>
+                            <div class="contact-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                                <span>contact@techvision.vn</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form-wrapper">
+                        <form class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Họ và tên</label>
+                                    <input type="text" id="name" placeholder="Nhập họ và tên" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" placeholder="Nhập email" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Chủ đề</label>
+                                <input type="text" id="subject" placeholder="Nhập chủ đề" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Nội dung</label>
+                                <textarea id="message" rows="4" placeholder="Nhập nội dung tin nhắn"
+                                    required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Gửi Tin Nhắn</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="footer-container">
+                <div class="footer-brand">
+                    <a href="#" class="brand-logo">
+                        <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                            <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient2)"
+                                stroke-width="2" />
+                            <circle cx="24" cy="24" r="8" fill="url(#techGradient2)" />
+                            <circle cx="24" cy="24" r="4" fill="#0a0f1a" />
+                            <defs>
+                                <linearGradient id="techGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00d4ff" />
+                                    <stop offset="100%" style="stop-color:#0072ff" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="brand-name">HRM System</span>
+                    </a>
+                    <p>Hệ thống chấm công nhân sự thông minh</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Tính Năng</h4>
+                        <a href="#">Chấm công</a>
+                        <a href="#">Quản lý nhân viên</a>
+                        <a href="#">Lịch làm việc</a>
+                        <a href="#">Báo cáo thống kê</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Tra Cứu</h4>
+                        <a href="#">Tra cứu nhân viên</a>
+                        <a href="#">Tra cứu lịch làm</a>
+                        <a href="#">Lịch sử tra cứu</a>
+                        <a href="#">Hệ thống thông tin</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Hỗ Trợ</h4>
+                        <a href="#">Liên hệ</a>
+                        <a href="#">Hướng dẫn sử dụng</a>
+                        <a href="#">Điều khoản</a>
+                        <a href="#">Chính sách</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>2026 HRM System. Tất cả dữ liệu và thông tin được bảo lưu.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Liên kết file Javascript -->
+    <script src="index.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+    <script type="module" src="auth-forms.js"></script>
+    <!-- menu-permissions.js đã bị XOÁ khỏi dự án: từng trùng lặp logic với profile-menu.js,
+         cả 2 cùng gọi Firestore và cùng ghi đè display của cùng phần tử -> race condition.
+         Toàn bộ logic phân quyền menu (profileMenuAdmin/Report/History VÀ menu "Tra cứu"
+         trên nav chính: menuChamCong/menuSearchStaff/menuSearchDate/menuSearchHistory)
+         giờ nằm DUY NHẤT trong profile-menu.js. -->
+    <script type="module" src="profile-menu.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+</body>
+
+</html>

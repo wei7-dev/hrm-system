@@ -1,0 +1,99 @@
+/* Bố cục chia đôi cột cho trang Admin quản lý */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Tự động co về 1 cột trên giao diện điện thoại màn hình nhỏ */
+@media (max-width: 768px) {
+    .admin-grid { 
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* Khung chứa kết quả mã QR bên phải */
+.qr-output-card {
+    background: rgba(10, 22, 40, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.qr-title {
+    color: #00d4ff;
+}
+
+.qr-placeholder {
+    color: #64748b; 
+    font-size: 0.95rem; 
+    text-align: center; 
+    margin-top: 20px;
+}
+
+/* Vùng Canvas chứa hình ảnh mã QR Code */
+#qrcode-canvas {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: none; /* Ẩn đi khi chưa bấm nút tạo */
+}
+
+/* Các thuộc tính chỉnh sửa form nhập liệu */
+.admin-form {
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+    padding-top: 10px;
+}
+
+.form-label {
+    display: block; 
+    margin-bottom: 8px; 
+    color: #94a3b8;
+}
+
+.form-input {
+    width: 100%; 
+    padding: 12px; 
+    background: #050b14; 
+    border: 1px solid rgba(0,212,255,0.2); 
+    border-radius: 8px; 
+    color: #fff;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #00d4ff;
+}
+
+.select-box option {
+    background: #0a1628;
+    color: #fff;
+}
+
+.text-center-btn {
+    width: 100%; 
+    margin-top: 10px;
+}
+
+/* Nút tải ảnh mã QR xuống máy màu xanh lá cây */
+.download-btn {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+    display: none; /* Ẩn đi khi chưa có QR */
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #2dc962 0%, #168a41 100%);
+}

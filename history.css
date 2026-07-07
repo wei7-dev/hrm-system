@@ -1,0 +1,351 @@
+ /* ATTENDANCE PAGE - TRANG CHẤM CÔNG RIÊNG */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #050b14 0%, #0a1628 50%, #050b14 100%);
+    min-height: 100vh;
+    color: #f1f5f9;
+}
+
+/* Header */
+.attendance-header {
+    background: rgba(5, 11, 20, 0.95);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    padding: 16px 24px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #00d4ff;
+}
+
+.back-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-logo .tech-icon-logo {
+    width: 36px;
+    height: 36px;
+}
+
+.header-logo span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00d4ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-time {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00d4ff;
+    font-family: 'Courier New', monospace;
+}
+/* Main Content */
+   /* Cấu trúc Layout Main Giao Diện Mới */
+.attendance-main {
+    padding-top: 100px;
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.attendance-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.attendance-title {
+    margin-bottom: 25px;
+}
+
+.attendance-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00d4ff, #0072ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+}
+
+.attendance-title p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+/* Khối Bộ Lọc (Filter Card) */
+.filter-card {
+    background: rgba(11, 19, 31, 0.8);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-form input,
+.filter-form select {
+    flex: 1;
+    min-width: 220px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    background: #050b14;
+    color: #fff;
+    outline: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+#monthFilter {
+    text-align: center;
+}
+
+#monthFilter::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.filter-form input:focus,
+.filter-form select:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
+}
+
+.filter-form button {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00d4ff, #0072ff);
+    color: #050b14;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+}
+
+   /* Khối Lịch Sử Tra Cứu (Nhật Ký) */
+.search-history-card {
+    background: rgba(11, 19, 31, 0.5);
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(6px);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.history-header h3 {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.clear-btn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.clear-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.history-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 140px;
+    overflow-y: auto;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 212, 255, 0.2);
+    border-radius: 4px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(5, 11, 20, 0.4);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    border-left: 3px solid #00d4ff;
+    animation: itemFadeIn 0.3s ease;
+}
+
+.history-item text-highlight {
+    color: #00d4ff;
+    font-weight: 600;
+}
+
+.history-item .time-stamp {
+    color: #64748b;
+    font-family: 'Courier New', monospace;
+}
+
+.history-empty {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: center;
+    padding: 6px 0;
+}
+
+   /* Khối Bảng Dữ Liệu Lịch Làm */
+.schedule-card {
+    background: rgba(11, 19, 31, 0.8);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding-bottom: 14px;
+}
+
+.card-header h3 {
+    font-size: 1.1rem;
+    color: #00d4ff;
+}
+
+.record-count {
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.history-table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.history-table th {
+    background: rgba(5, 11, 20, 0.6);
+    color: #94a3b8;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-bottom: 2px solid rgba(0, 212, 255, 0.15);
+}
+
+.history-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    color: #e2e8f0;
+}
+
+.history-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.03);
+}
+
+/* Badge trạng thái ca làm */
+.status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status.work {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.status.leave {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+@keyframes itemFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

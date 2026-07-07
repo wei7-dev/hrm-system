@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tra cứu nhân viên</title>
+
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="chamcong.css">
+    <link rel="stylesheet" href="search-staff.css">
+</head>
+
+<body>
+    <!-- Header đơn giản -->
+    <header class="attendance-header">
+        <div class="header-inner">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Quay lại
+            </a>
+            <div class="header-logo">
+                <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                    <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient)"
+                        stroke-width="2" />
+                    <circle cx="24" cy="24" r="8" fill="url(#techGradient)" />
+                    <circle cx="24" cy="24" r="4" fill="#0a0f1a" />
+                    <defs>
+                        <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4ff" />
+                            <stop offset="100%" style="stop-color:#0072ff" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>HRM System</span>
+            </div>
+            <div class="header-time" id="currentTime">--:--:--</div>
+        </div>
+    </header>
+    
+    <main class="attendance-main">
+        <div class="attendance-wrapper">
+            TOÀN BỘ NỘI DUNG
+        </div>
+        <div class="search-card">
+            <div class="search-form">
+                <input type="text" id="searchEmployeeId" placeholder="Mã nhân viên">
+                <input type="text" id="searchEmployeeName" placeholder="Họ tên">
+                <select id="searchDepartment">
+                    <option value="">Tất cả phòng ban</option>
+                </select>
+                <button id="searchBtn">Tìm kiếm</button>
+            </div>
+        </div>
+        <div class="history-container">
+            <h3>Kết quả tra cứu</h3>
+            <div class="history-table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Mã NV</th>
+                            <th>Họ tên</th>
+                            <th>Phòng ban</th>
+                            <th>Chức vụ</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <!-- Script -->
+    <script type="module" src="search-staff.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+</body>
+</html>

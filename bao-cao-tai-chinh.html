@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Tài Chính - HRM System</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="bao-cao-tai-chinh.css">
+</head>
+<body>
+    <!-- Header đơn giản -->
+    <header class="attendance-header">
+        <div class="header-inner">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Quay lại
+            </a>
+            <div class="header-logo">
+                <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                    <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient)" stroke-width="2"/>
+                    <circle cx="24" cy="24" r="8" fill="url(#techGradient)"/>
+                    <circle cx="24" cy="24" r="4" fill="#0a0f1a"/>
+                    <defs>
+                        <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4ff"/>
+                            <stop offset="100%" style="stop-color:#0072ff"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>HRM System</span>
+            </div>
+            <div class="header-time" id="currentTime">--:--:--</div>
+        </div>
+    </header>
+
+    <main class="fin-main">
+        <div class="fin-wrapper">
+
+            <!-- Vault door hero -->
+            <section class="fin-hero">
+                <div class="vault-ring">
+                    <div class="vault-spokes"></div>
+                    <div class="vault-core">
+                        <span class="vault-label">Vốn hoá ước tính</span>
+                        <span class="vault-number" id="heroValuation">--</span>
+                        <span class="vault-delta" id="heroDelta">--</span>
+                    </div>
+                </div>
+                <div class="fin-hero-text">
+                    <p class="fin-eyebrow">Báo cáo tài chính · Dành riêng cho Nhà đầu tư</p>
+                    <h1>Con đường tăng trưởng của công ty, nhìn thấy trước khi nó xảy ra.</h1>
+                    <p class="fin-sub">Dữ liệu mô phỏng dựa trên xu hướng vận hành hiện tại — dùng để hình dung quỹ đạo, không phải cam kết lợi nhuận.</p>
+                </div>
+            </section>
+
+            <!-- Sơ đồ tài chính tăng giảm -->
+            <section class="fin-section">
+                <div class="section-head">
+                    <h2>Dòng doanh thu 12 tháng</h2>
+                    <p>Biến động theo quý, đối chiếu với chi phí vận hành.</p>
+                </div>
+                <div class="chart-card">
+                    <svg id="revenueChart" viewBox="0 0 900 340" class="revenue-svg"></svg>
+                    <div class="chart-legend">
+                        <span class="legend-item"><i class="dot dot-rev"></i> Doanh thu</span>
+                        <span class="legend-item"><i class="dot dot-cost"></i> Chi phí vận hành</span>
+                    </div>
+                </div>
+                <div class="stat-row" id="statRow"></div>
+            </section>
+
+            <!-- Dự phóng tăng trưởng % -->
+            <section class="fin-section">
+                <div class="section-head">
+                    <h2>Dự phóng tăng trưởng</h2>
+                    <p>Ba kịch bản mô phỏng cho 24 tháng tới, dựa trên tốc độ mở rộng hiện tại.</p>
+                </div>
+                <div class="scenario-grid">
+                    <div class="scenario-card scenario-low">
+                        <span class="scenario-tag">Thận trọng</span>
+                        <span class="scenario-pct">+18%</span>
+                        <p>Giữ nhịp khách hàng hiện tại, không mở thêm thị trường mới.</p>
+                    </div>
+                    <div class="scenario-card scenario-mid">
+                        <span class="scenario-tag">Cơ sở</span>
+                        <span class="scenario-pct">+42%</span>
+                        <p>Mở rộng đội ngũ kinh doanh, giữ nguyên biên lợi nhuận.</p>
+                    </div>
+                    <div class="scenario-card scenario-high">
+                        <span class="scenario-tag">Bứt phá</span>
+                        <span class="scenario-pct">+87%</span>
+                        <p>Ký thành công 2 đối tác chiến lược đang đàm phán.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dự án tương lai -->
+            <section class="fin-section">
+                <div class="section-head">
+                    <h2>Dự án tương lai</h2>
+                    <p>Các sáng kiến đang trong lộ trình phát triển sản phẩm.</p>
+                </div>
+                <div class="project-timeline" id="projectTimeline"></div>
+            </section>
+
+            <!-- Cty hợp tác có thể đi xa bao nhiêu -->
+            <section class="fin-section">
+                <div class="section-head">
+                    <h2>Tiềm năng hợp tác dài hạn</h2>
+                    <p>Ước tính mức độ mở rộng nếu duy trì quan hệ đối tác chiến lược qua từng mốc thời gian.</p>
+                </div>
+                <div class="horizon-card">
+                    <div class="horizon-track">
+                        <div class="horizon-fill" id="horizonFill"></div>
+                        <div class="horizon-marks" id="horizonMarks"></div>
+                    </div>
+                    <div class="horizon-labels" id="horizonLabels"></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+    <script type="module" src="bao-cao-tai-chinh.js"></script>
+</body>
+</html>

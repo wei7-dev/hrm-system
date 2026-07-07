@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chấm Công - HRM System</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="chamcong.css">
+</head>
+<body>
+    <!-- Header đơn giản -->
+    <header class="attendance-header">
+        <div class="header-inner">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Quay lại
+            </a>
+            <div class="header-logo">
+                <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                    <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient)" stroke-width="2"/>
+                    <circle cx="24" cy="24" r="8" fill="url(#techGradient)"/>
+                    <circle cx="24" cy="24" r="4" fill="#0a0f1a"/>
+                    <defs>
+                        <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4ff"/>
+                            <stop offset="100%" style="stop-color:#0072ff"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>HRM System</span>
+            </div>
+            <div class="header-time" id="currentTime">--:--:--</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="attendance-main">
+        <div class="attendance-wrapper">
+            <!-- Tiêu đề -->
+            <div class="attendance-title">
+                <h1>Chấm Công Nhân Viên</h1>
+                <p>Quét mã QR trên thẻ nhân viên để chấm công</p>
+            </div>
+
+            <!-- Khung quét QR lớn -->
+            <div class="scanner-container">
+                <div class="scanner-box" id="scannerBox">
+                    <!-- 4 góc -->
+                    <div class="scanner-corners">
+                        <span class="corner top-left"></span>
+                        <span class="corner top-right"></span>
+                        <span class="corner bottom-left"></span>
+                        <span class="corner bottom-right"></span>
+                    </div>
+                    
+                    <!-- Đường quét -->
+                    <div class="scanner-line" id="scannerLine"></div>
+                    
+                    <!-- Placeholder khi chưa bật camera -->
+                    <div class="scanner-placeholder" id="scannerPlaceholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                            <rect x="14" y="14" width="4" height="4"/>
+                            <path d="M18 14v4h3"/>
+                            <path d="M14 18h4"/>
+                        </svg>
+                        <p>Bấm nút bên dưới để bật camera</p>
+                    </div>
+                    
+                    <!-- Div để render camera của html5-qrcode -->
+                    <div id="qrReader" style="display: none; width: 100%; height: 100%;"></div>
+                </div>
+                
+                <!-- Nút điều khiển -->
+                <div class="scanner-controls">
+                    <select id="cameraSelect" class="camera-select hidden" style="width:100%;margin-bottom:12px;padding:10px;border-radius:8px;background:#0a0f1a;color:#00d4ff;border:1px solid #00d4ff;font: size 15px;">
+                        <option value="">Đang tìm camera...</option>
+                    </select>
+                    <button class="btn-camera start" id="startCameraBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        Bật Camera Quét QR
+                    </button>
+                    <button class="btn-camera stop hidden" id="stopCameraBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="6" width="12" height="12" rx="2"/>
+                        </svg>
+                        Tắt Camera
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kết quả chấm công -->
+            <div class="result-container hidden" id="resultContainer">
+                <div class="result-card" id="resultCard">
+                    <div class="result-icon" id="resultIcon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="result-content">
+                        <h2 id="resultTitle">Chấm công thành công!</h2>
+                        <div class="result-details">
+                            <div class="detail-row">
+                                <span class="label">Mã nhân viên:</span>
+                                <span class="value" id="resultEmployeeId">NV001234</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Họ tên:</span>
+                                <span class="value" id="resultEmployeeName">Nguyễn Văn A</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Thời gian:</span>
+                                <span class="value" id="resultTime">08:00:25 - 30/05/2026</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Loại:</span>
+                                <span class="value highlight" id="resultType">Vào làm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-continue" id="continueBtn">Tiếp tục chấm công</button>
+                </div>
+            </div>
+
+            <!-- Lịch sử chấm công hôm nay -->
+            <div class="history-container">
+                <h3>Lịch sử chấm công hôm nay</h3>
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Mã NV</th>
+                                <th>Họ tên</th>
+                                <th>Giờ vào</th>
+                                <th>Giờ ra</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- <tr>
+                                <td>NV001234</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>08:00:25</td>
+                                <td>--:--:--</td>
+                                <td><span class="status working">Đang làm</span></td>
+                            </tr>
+                            <tr>
+                                <td>NV005678</td>
+                                <td>Trần Thị B</td>
+                                <td>07:55:10</td>
+                                <td>--:--:--</td>
+                                <td><span class="status working">Đang làm</span></td>
+                            </tr>
+                            <tr>
+                                <td>NV009012</td>
+                                <td>Lê Văn C</td>
+                                <td>08:15:45</td>
+                                <td>--:--:--</td>
+                                <td><span class="status late">Đi trễ</span></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Thư viện quét QR -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="chamcong.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+</body>
+</html>

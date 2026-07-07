@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Trị - Tạo Mã Nhân Viên & QR</title>
+    <!-- <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="chamcong.css">
+    <link rel="stylesheet" href="admin.css"> -->
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="chamcong.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <!-- Màn hình chặn khi chưa xác thực / không đủ quyền -->
+    <div id="authGate" style="position:fixed;inset:0;background:#050b14;z-index:999;display:flex;align-items:center;justify-content:center;text-align:center;color:#f1f5f9;padding:20px;">
+        <div>
+            <p style="font-size:1.1rem;margin-bottom:12px;">🔒 Đang kiểm tra quyền truy cập...</p>
+            <p style="color:#64748b;font-size:0.9rem;">Nếu bạn chưa đăng nhập hoặc không có quyền Admin, bạn sẽ được chuyển về trang chủ.</p>
+        </div>
+    </div>
+
+    <!-- Header đơn giản -->
+    <header class="attendance-header" style="display:none;" id="adminHeader">
+        <div class="header-inner">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Quay lại
+            </a>
+            <div class="header-logo">
+                <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                    <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient)" stroke-width="2"/>
+                    <circle cx="24" cy="24" r="8" fill="url(#techGradient)"/>
+                    <circle cx="24" cy="24" r="4" fill="#0a0f1a"/>
+                    <defs>
+                        <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4ff"/>
+                            <stop offset="100%" style="stop-color:#0072ff"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>HRM System</span>
+            </div>
+            <div class="header-time" id="currentTime">--:--:--</div>
+        </div>
+    </header>
+
+    <main style="padding-top: 100px; display:none;" id="adminMain">
+        <div class="admin-grid">
+
+            <div class="schedule-card" style="margin: 0;">
+                <div class="card-header">
+                    <h3>Thêm Thành Viên & Tự Sinh QR</h3>
+                </div>
+                <form id="addEmployeeForm" class="admin-form">
+
+                    <div class="filter-item">
+                        <label class="form-label">Họ và tên thành viên:</label>
+                        <input type="text" id="newEmpName" class="form-input" placeholder="Nhập họ tên đầy đủ..."
+                            required>
+                    </div>
+
+                    <div class="filter-item">
+                        <label class="form-label">Phân loại đối tượng:</label>
+                        <select id="newEmpType" class="form-input select-box" required>
+                            <option value="NV">Chính thức (NV)</option>
+                            <option value="SV">Sinh viên thử việc (SV)</option>
+                            <option value="TT">Thực tập sinh (TT)</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-item">
+                        <label class="form-label">Ngành / Khối phòng ban công tác:</label>
+                        <select id="newEmpDept" class="form-input select-box" required>
+                            <option value="IT">Công nghệ thông tin (IT)</option>
+                            <option value="HR">Quản trị nhân sự (HR)</option>
+                            <option value="MKT">Marketing (MKT)</option>
+                            <option value="ACC">Kế toán tài chính (ACC)</option>
+                            <option value="SALES">Phòng Kinh doanh (SALES)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="search-btn text-center-btn">
+                        Kích Hoạt, Cấp Mã Khóa & Tạo QR
+                    </button>
+                </form>
+            </div>
+
+            <div class="result-box">
+                <h3>Kết quả Mã Định Danh & QR</h3>
+                <p id="qrPlaceholderText">Vui lòng nhập tên và bấm nút kích hoạt...</p>
+
+                <div id="generatedCodeDisplay" style="display: none; margin: 15px 0;">
+                    <p style="font-size: 16px;">Mã cấp phát: <strong id="empCodeText"
+                            style="color: #00ffcc; font-size: 20px;"></strong></p>
+
+                    <div id="qrcode-canvas" style="margin: 15px auto; text-align: center;"></div>
+
+                    <button type="button" id="downloadQrBtn"
+                        style="display: none; background: #00ffcc; color: #0d1b2a; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: 0.3s;">
+                        📥 Tải Mã QR Xuống
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        (function () {
+            function runClock() {
+                const timer = document.getElementById("currentTime");
+                if (!timer) return;
+
+                const update = () => {
+                    const d = new Date();
+                    const h = String(d.getHours()).padStart(2, '0');
+                    const m = String(d.getMinutes()).padStart(2, '0');
+                    const s = String(d.getSeconds()).padStart(2, '0');
+                    timer.textContent = h + ":" + m + ":" + s;
+                };
+                update();
+                setInterval(update, 1000); // Lặp liên tục mỗi 1 giây
+            }
+            // Kích hoạt ngay khi trình duyệt đọc tới dòng này
+            runClock();
+            // Đề phòng giao diện render chậm, kích hoạt lại khi toàn bộ cấu trúc DOM sẵn sàng
+            document.addEventListener("DOMContentLoaded", runClock);
+        })();
+    </script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+    <script type="module" src="admin-auth.js"></script>
+    <script type="module" src="admin.js"></script>
+    <!-- <script src="https://cloudflare.com"></script> -->
+</body>
+
+</html>

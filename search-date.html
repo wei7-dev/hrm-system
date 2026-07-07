@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chấm Công - HRM System</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="search-date.css">
+</head>
+
+<body>
+    <!-- Header đơn giản -->
+    <header class="attendance-header">
+        <div class="header-inner">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Quay lại
+            </a>
+            <div class="header-logo">
+                <svg viewBox="0 0 48 48" class="tech-icon-logo">
+                    <polygon points="24,4 42,14 42,34 24,44 6,34 6,14" fill="none" stroke="url(#techGradient)"
+                        stroke-width="2" />
+                    <circle cx="24" cy="24" r="8" fill="url(#techGradient)" />
+                    <circle cx="24" cy="24" r="4" fill="#0a0f1a" />
+                    <defs>
+                        <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4ff" />
+                            <stop offset="100%" style="stop-color:#0072ff" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>HRM System</span>
+            </div>
+            <div class="header-time" id="currentTime">--:--:--</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="attendance-main">
+        <div class="attendance-wrapper">
+            <div class="attendance-title">
+                <h1>Tra Cứu Lịch Làm</h1>
+                <p>Xem lịch làm việc của nhân viên</p>
+            </div>
+            <div class="filter-card">
+                <div class="filter-form">
+                    <input type="text" id="monthFilter" placeholder="dd/mm/yyyy" maxlength="10" inputmode="numeric">
+                    <select id="employeeFilter">
+                        <option value="">
+                            Tất cả nhân viên
+                        </option>
+                    </select>
+                    <button id="searchBtn">
+                        Xem lịch
+                    </button>
+                </div>
+            </div>
+
+            <div class="history-container">
+                <h3>Lịch làm việc</h3>
+                <div class="schedule-card">
+                    <div class="card-header">
+                        <h3>Lịch làm việc tháng hiện tại</h3>
+                        <span class="record-count">
+                            26 ca làm
+                        </span>
+                    </div>
+
+                    <div class="history-table-wrapper">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Phòng ban</th>
+                                    <th>Nhân viên</th>
+                                    <th>Ca làm</th>
+                                    <th>Giờ vào</th>
+                                    <th>Giờ ra</th>
+                                    <th>Tổng giờ</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- script form -->
+    <!-- <script src="search-date.js"></script> -->
+    <script type="module" src="search-date.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="mobile-guard.js"></script>
+</body>
+
+</html>
