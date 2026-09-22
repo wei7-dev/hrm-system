@@ -4,9 +4,9 @@
 
 | Menu | HR | Staff (NV chính thức/thực tập/SV) | Nhà đầu tư |
 |---|---|---|---|
-| Chấm công, Tra cứu NV, Tra cứu lịch, Lịch sử tra cứu | ✅ | ✅ | ❌ ẩn |
-| Quản Trị Hệ Thống (admin.html) | ✅ | ❌ ẩn | ❌ ẩn |
-| Báo cáo tài chính - Dự án tương lai | ❌ ẩn | ❌ ẩn | ✅ |
+| Chấm công, Tra cứu NV, Tra cứu lịch, Lịch sử tra cứu | ✅ (hiện) | ✅ (hiện) | ❌ (ẩn) |
+| Quản Trị Hệ Thống (admin.html) | ✅ (hiện) | ❌ (ẩn) | ❌ (ẩn) |
+| Báo cáo tài chính - Dự án tương lai | ❌ (ẩn) | ❌ (ẩn) | ✅ (hiện) |
 
 Việc ẩn/hiện nằm ở `menu-permissions.js` (đọc field `role` trong `accounts/{uid}`), nhưng **đây chỉ là lớp giao diện**. Lớp chặn dữ liệu thật nằm ở `firestore.rules` — đã cấu hình đúng ma trận trên: Staff/HR đọc được `nhan_vien_chinh_thuc` + `attendance`, Nhà đầu tư thì không; ngược lại `bao_cao_tai_chinh` chỉ Nhà đầu tư (và HR/Admin) đọc được.
 
